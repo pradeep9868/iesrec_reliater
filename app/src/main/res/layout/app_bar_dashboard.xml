@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:fitsSystemWindows="true"
+    tools:context=".Dashboard">
+
+    <android.support.design.widget.AppBarLayout android:layout_height="wrap_content"
+        android:layout_width="match_parent" android:theme="@style/AppTheme.AppBarOverlay">
+
+
+        <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
+            android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary" app:popupTheme="@style/AppTheme.PopupOverlay" >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:orientation="horizontal"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:background="?attr/colorPrimary">
+                <LinearLayout
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:id="@+id/location"
+                    android:orientation="horizontal"
+                    android:layout_weight="1">
+                    <co.jlabs.cersei_retailer.custom_components.TextView_White
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:padding="5dp"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:text="@string/ico_locat"/>
+                    <TextView
+                        android:id="@+id/text_location"
+                        android:padding="3dp"
+                        android:textSize="14sp"
+                        android:textColor="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Freedom Fighter Enclave"/>
+                </LinearLayout>
+                <co.jlabs.cersei_retailer.custom_components.TextView_White
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:padding="5dp"
+                    android:gravity="center"
+                    android:layout_marginRight="5dp"
+                    android:text="@string/ico_filter"/>
+                <co.jlabs.cersei_retailer.custom_components.TextView_White
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:padding="5dp"
+                    android:gravity="center"
+                    android:text="@string/ico_notification"/>
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/dashboard" />
+
+</android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey"
+    android:padding="3dp">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="3dp"
+    android:background="#ffffff"
+    android:gravity="center">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+                <co.jlabs.cersei_retailer.custom_components.MyImageView
+                    android:id="@+id/pic"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY" />
+                <TextView
+                    android:id="@+id/mask"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#88222222"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <co.jlabs.cersei_retailer.custom_components.FontFitTextView
+                        android:id="@+id/text"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textColor="#ffffff"
+                        android:textStyle="bold"
+                        android:padding="10dp"
+                        android:textSize="13dp"/>
+
+                </LinearLayout>
+            </FrameLayout>
+
+            <LinearLayout
+                android:paddingTop="8dp"
+                android:layout_gravity="bottom"
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="40dp">
+                <co.jlabs.cersei_retailer.custom_components.TextView_Black
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:text="@string/ico_myorder"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginRight="10dp"
+                    android:gravity="right|center_vertical">
+                    <co.jlabs.cersei_retailer.custom_components.TextView_Black
+                        android:layout_width="30dp"
+                        android:layout_height="35dp"
+                        android:textSize="20sp"
+                        android:gravity="center"
+                        android:text="@string/ico_remove"/>
+                    <TextView
+                        android:layout_width="25dp"
+                        android:layout_height="30dp"
+                        android:textSize="18sp"
+                        android:gravity="center"
+                        android:text="2"/>
+                    <co.jlabs.cersei_retailer.custom_components.TextView_Black
+                        android:layout_width="30dp"
+                        android:layout_height="35dp"
+                        android:background="#ffff"
+                        android:textSize="20sp"
+                        android:gravity="center"
+                        android:text="@string/ico_add"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+        <co.jlabs.cersei_retailer.custom_components.MyLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </co.jlabs.cersei_retailer.custom_components.MyLinearLayout>
+        <co.jlabs.cersei_retailer.custom_components.TextView_Triangle
+            android:layout_gravity="bottom"
+            android:layout_width="58dp"
+            android:layout_height="20dp"
+            android:gravity="center"
+            android:layout_marginBottom="30dp"
+            android:textSize="9sp"
+            android:text="@string/rating_points"/>
+    </FrameLayout>
+</LinearLayout>
+</LinearLayout>
