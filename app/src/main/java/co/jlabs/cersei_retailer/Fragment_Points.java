@@ -14,12 +14,23 @@ import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.SparseArrayCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AbsListView;
 import android.widget.TextView;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import co.jlabs.cersei_retailer.custom_components.PagerSlidingStripPoints;
 import co.jlabs.cersei_retailer.custom_components.SampleListView;
@@ -54,6 +65,9 @@ public class Fragment_Points extends Fragment  implements ScrollTabHolder, ViewP
     private AccelerateDecelerateInterpolator mSmoothInterpolator;
 
     View from_balance,to_balance,from_point,to_point,from_rating,to_rating;
+    String url = StaticCatelog.geturl()+"cersei/reward";
+    JSONObject json=null;
+
 
     static Fragment_Points init(int val) {
         Fragment_Points truitonFrag = new Fragment_Points();
@@ -97,15 +111,6 @@ public class Fragment_Points extends Fragment  implements ScrollTabHolder, ViewP
         mPagerSlidingTabStrip = (PagerSlidingStripPoints) layoutView.findViewById(R.id.tabs);
         mViewPager = (ViewPager) layoutView.findViewById(R.id.pager);
         mViewPager.setOffscreenPageLimit(3);
-
-        mPagerAdapter = new PagerAdapter(getContext());
-        mPagerAdapter.setTabHolderScrollingContent(this);
-
-        mViewPager.setAdapter(mPagerAdapter);
-
-        mPagerSlidingTabStrip.setViewPager(mViewPager);
-        mPagerSlidingTabStrip.setOnPageChangeListener(this);
-        mLastY=0;
 
         return layoutView;
     }
@@ -210,7 +215,7 @@ public class Fragment_Points extends Fragment  implements ScrollTabHolder, ViewP
     @Override
     public void startLoadbylocation(String location) {
         //here I will load Only first list that shows offers based on location
-        tellThatLoadedSuccessfully();
+        tellThatLoadedSuccessfully(true);
     }
 
 
@@ -386,21 +391,76 @@ public class Fragment_Points extends Fragment  implements ScrollTabHolder, ViewP
         super.onResume();
         if(eventInitialiser!=null)
             eventInitialiser.registerMyevent(3,this);
-        tellThatLoadedSuccessfully();
+        download_information("");
 
     }
 
 
-    public void tellThatLoadedSuccessfully()
+    public void tellThatLoadedSuccessfully(final Boolean successfull)
     {
         new Handler().postDelayed(new Runnable() {
 
             @Override
             public void run() {
                 if (eventInitialiser != null)
-                    eventInitialiser.MyloadingCompleted(3);
+                    eventInitialiser.MyloadingCompleted(3, successfull);
             }
         }, 1000);
 
+    }
+
+    private void download_information(String userid) {
+
+        String tag_json_obj = "json_obj_req_my_earnings";
+
+        Log.i("Myapp", "Calling url " + url);
+        if(json==null) {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                    url, null,
+                    new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(final JSONObject response) {
+                            json = response;
+                            try {
+                                createcontentforthispage(json.getJSONObject("extra").getString("total_balance"), json.getJSONObject("extra").getString("total_rewards"), json.getJSONObject("extra").getString("total_earnings"), json.getJSONObject("extra").getString("total_redeemed"), json.getJSONArray("rewards"), json.getJSONArray("earning"), json.getJSONArray("history"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                tellThatLoadedSuccessfully(false);
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.d("Error", "Error: " + error.getMessage());
+                    tellThatLoadedSuccessfully(false);
+                }
+            });
+            AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+        }
+        else
+        {
+            try {
+                createcontentforthispage(json.getJSONObject("extra").getString("total_balance"), json.getJSONObject("extra").getString("total_rewards"), json.getJSONObject("extra").getString("total_earnings"), json.getJSONObject("extra").getString("total_redeemed"), json.getJSONArray("rewards"), json.getJSONArray("earning"), json.getJSONArray("history"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void createcontentforthispage(String total_balance,String num_rewards,String num_points_earned,String num_points_redeemed,JSONArray rewards,JSONArray points_earned,JSONArray points_redeemed)
+    {
+
+        mPagerAdapter = new PagerAdapter(getContext());
+        mPagerAdapter.setTabHolderScrollingContent(this);
+
+        mViewPager.setAdapter(mPagerAdapter);
+
+        mPagerSlidingTabStrip.setViewPager(mViewPager);
+        mPagerSlidingTabStrip.setOnPageChangeListener(this);
+        mLastY=0;
+        tellThatLoadedSuccessfully(true);
     }
 }

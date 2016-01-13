@@ -85,7 +85,8 @@ public class Fragment_Offers extends Fragment implements FragmentEventHandler {
 
     @Override
     public void startLoadbylocation(String location) {
-        download_offers();
+        json=null;
+        download_offers(location);
     }
 
     class CustomPagerAdapter extends PagerAdapter {
@@ -157,28 +158,38 @@ public class Fragment_Offers extends Fragment implements FragmentEventHandler {
         super.onResume();
         if(eventInitialiser!=null)
             eventInitialiser.registerMyevent(1,this);
-        download_offers();
+        if(json==null)
+            download_offers(StaticCatelog.getStringProperty(getContext(),"location"));
 
 
     }
 
-    public void tellThatLoadedSuccessfully()
+    public void tellThatLoadedSuccessfully(final Boolean successfull)
     {
         new Handler().postDelayed(new Runnable() {
 
             @Override
             public void run() {
                 if (eventInitialiser != null)
-                    eventInitialiser.MyloadingCompleted(1);
+                    eventInitialiser.MyloadingCompleted(1,successfull);
             }
         }, 1000);
 
     }
 
 
-    private void download_offers() {
+    private void download_offers(String location) {
 
         String tag_json_obj = "json_obj_req_get_offers";
+
+        if(location.length()%2==0)
+        {
+            url=StaticCatelog.geturl()+"cersei/show_offers?location=2";
+        }
+        else
+        {
+            url=StaticCatelog.geturl()+"cersei/show_offers?location=1";
+        }
 
         Log.i("Myapp", "Calling url " + url);
         if(json==null) {
@@ -193,7 +204,7 @@ public class Fragment_Offers extends Fragment implements FragmentEventHandler {
                                 show_offers(json.getJSONArray("banners"),json.getJSONArray("offers"));
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                                tellThatLoadedSuccessfully();
+                                tellThatLoadedSuccessfully(false);
                             }
                         }
                     }, new Response.ErrorListener() {
@@ -202,7 +213,7 @@ public class Fragment_Offers extends Fragment implements FragmentEventHandler {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     VolleyLog.d("Error", "Error: " + error.getMessage());
-                    tellThatLoadedSuccessfully();
+                    tellThatLoadedSuccessfully(false);
                 }
             });
             AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
@@ -233,11 +244,10 @@ public class Fragment_Offers extends Fragment implements FragmentEventHandler {
         vpPager.setSwipeScrollDurationFactor(3);
         vpPager.setInterval(2000);
         vpPager.startAutoScroll();
-//        vpPager.setPageTransformer(true, new StackTransformer());
         vpPager.setPageTransformer(true, new ZoomOutTranformer());
 
         recyclerView.setAdapter(elementsAdapter);
-        tellThatLoadedSuccessfully();
+        tellThatLoadedSuccessfully(true);
 
     }
 }

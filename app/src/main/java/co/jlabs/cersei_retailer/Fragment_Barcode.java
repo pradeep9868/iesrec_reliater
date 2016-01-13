@@ -128,7 +128,7 @@ public class Fragment_Barcode extends BarCodeScannerFragment implements Fragment
             @Override
             public void run() {
                 if (eventInitialiser != null)
-                    eventInitialiser.MyloadingCompleted(2);
+                    eventInitialiser.MyloadingCompleted(2,true);
             }
         }, 1000);
 

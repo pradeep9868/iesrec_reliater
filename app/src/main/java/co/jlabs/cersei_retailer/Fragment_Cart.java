@@ -49,7 +49,7 @@ public class Fragment_Cart extends Fragment implements FragmentEventHandler {
     @Override
     public void startLoadbylocation(String location) {
         //will be requiring to delete items on cart that are not in current location
-        tellThatLoadedSuccessfully();
+        tellThatLoadedSuccessfully(true);
     }
 
     public void addInitialisationEvent(FragmentsEventInitialiser eventInitialiser)
@@ -62,18 +62,18 @@ public class Fragment_Cart extends Fragment implements FragmentEventHandler {
         super.onResume();
         if(eventInitialiser!=null)
             eventInitialiser.registerMyevent(4,this);
-        tellThatLoadedSuccessfully();
+        tellThatLoadedSuccessfully(true);
 
     }
 
-    public void tellThatLoadedSuccessfully()
+    public void tellThatLoadedSuccessfully(final Boolean successfull)
     {
         new Handler().postDelayed(new Runnable() {
 
             @Override
             public void run() {
                 if (eventInitialiser != null)
-                    eventInitialiser.MyloadingCompleted(4);
+                    eventInitialiser.MyloadingCompleted(4,successfull);
             }
         }, 1000);
 

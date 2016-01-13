@@ -50,6 +50,8 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
     FragmentEventHandler ViewpagerHandler=null,CameraHandler=null,ScoreHandler=null,cartHandler=null;
     LoadingDialogBox loadingDialogBox;
     Boolean loaded_first_page,loaded_second_page,loaded_third_page,loaded_forth_page;
+    Boolean was_success_loaded_first_page,was_success_loaded_second_page,was_success_loaded_third_page,was_success_loaded_forth_page;
+
     String url = StaticCatelog.geturl()+"cersei/location";
 
 
@@ -198,13 +200,13 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
     }
 
     @Override
-    public void MyloadingCompleted(int position) {
+    public void MyloadingCompleted(int position,Boolean successfull) {
         switch (position)
         {
-            case 1: loaded_first_page=true; break;
-            case 2: loaded_second_page=true; break;
-            case 3: loaded_third_page=true; break;
-            case 4: loaded_forth_page=true; break;
+            case 1: loaded_first_page=true; was_success_loaded_first_page=successfull; break;
+            case 2: loaded_second_page=true; was_success_loaded_second_page=successfull; break;
+            case 3: loaded_third_page=true; was_success_loaded_third_page=successfull; break;
+            case 4: loaded_forth_page=true; was_success_loaded_forth_page=successfull; break;
         }
         if(loaded_first_page&&loaded_second_page&&loaded_third_page&&loaded_forth_page)
         {
@@ -276,7 +278,7 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-
+        Log.i("Myapp", "On Resume Called");
         if(CameraHandler!=null&&ViewpagerHandler!=null)
         {
             ViewpagerHandler.adjustCameraOrViewPager(true);
@@ -294,12 +296,12 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
         super.startActivity(intent);
     }
 
-    public void update_ui_for_location_withevent()
+    public void update_ui_for_location_withevent(String location)
     {
-        ViewpagerHandler.startLoadbylocation("Saket");
-        CameraHandler.startLoadbylocation("Saket");
-        ScoreHandler.startLoadbylocation("Saket");
-        cartHandler.startLoadbylocation("Saket");
+        ViewpagerHandler.startLoadbylocation(location);
+        CameraHandler.startLoadbylocation(location);
+        ScoreHandler.startLoadbylocation(location);
+        cartHandler.startLoadbylocation(location);
         update_ui_for_location();
     }
 
@@ -324,22 +326,32 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
         loaded_second_page=false;
         loaded_third_page=false;
         loaded_forth_page=false;
+        was_success_loaded_first_page=false;
+        was_success_loaded_second_page=false;
+        was_success_loaded_third_page=false;
+        was_success_loaded_forth_page=false;
     }
 
     public void end_update_ui_for_location()
     {
+        String s="";
         loadingDialogBox.dismiss();
+        if(!(was_success_loaded_first_page&&was_success_loaded_second_page&&was_success_loaded_third_page&&was_success_loaded_forth_page))
+        {
+            if(!was_success_loaded_first_page)
+                s= s+" First ";
+            if(!was_success_loaded_second_page)
+                s=s+" Second ";
+            if(!was_success_loaded_third_page)
+                s=s+" Third ";
+            if(!was_success_loaded_forth_page)
+                s=s+" Fourth ";
+            Toast.makeText(this,"An Error occurred during loading data for page:"+s,Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void getLocation()
     {
-//        String s= StaticCatelog.load_json(this,R.raw.location);
-//
-//        try {
-//            json= new JSONObject(s);
-//        } catch (JSONException e) {
-//
-//        }
         int success;
         try {
             success = json.getInt("success");
@@ -362,7 +374,7 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
     public void update_location(String location) {
         ((TextView)selectLocation.findViewById(R.id.text_location)).setText(location);
         StaticCatelog.setStringProperty(this, "location", location);
-        update_ui_for_location_withevent();
+        update_ui_for_location_withevent(location);
     }
 
 

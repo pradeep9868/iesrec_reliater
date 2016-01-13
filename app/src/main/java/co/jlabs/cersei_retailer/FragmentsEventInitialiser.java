@@ -5,5 +5,5 @@ package co.jlabs.cersei_retailer;
  */
 public interface FragmentsEventInitialiser {
     void registerMyevent(int position,FragmentEventHandler eventHandler);
-    void MyloadingCompleted(int position);
+    void MyloadingCompleted(int position,Boolean Successfull);
 }

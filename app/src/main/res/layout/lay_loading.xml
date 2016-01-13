@@ -10,10 +10,15 @@
         android:orientation="vertical"
         android:gravity="center"
         android:layout_height="wrap_content">
-
-        <co.jlabs.cersei_retailer.custom_components.LoadingView
-            android:layout_width="150dp"
-            android:layout_height="150dp" />
+        <LinearLayout
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:gravity="center">
+        <ProgressBar
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:indeterminate="true"/>
+        </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

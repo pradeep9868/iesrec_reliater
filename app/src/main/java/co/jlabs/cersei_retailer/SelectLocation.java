@@ -37,7 +37,20 @@ public class SelectLocation extends Activity implements LocationPopup.onLocation
         setContentView(R.layout.select_location);
         context=this;
        // getLocation();
-        download_locations();
+        if(StaticCatelog.getStringProperty(this,"location")==null) {
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    download_locations();
+                }
+            }, 1000);
+        }
+        else
+        {
+            ((TextView)findViewById(R.id.select)).setText(StaticCatelog.getStringProperty(this,"location"));
+            start_activity();
+        }
     }
 
     @Override
@@ -63,13 +76,6 @@ public class SelectLocation extends Activity implements LocationPopup.onLocation
     public void getLocation()
     {
 
-//        String s= StaticCatelog.load_json(this,R.raw.location);
-//
-//        try {
-//            json= new JSONObject(s);
-//        } catch (JSONException e) {
-//
-//        }
         int success;
         try {
             success = json.getInt("success");
@@ -83,7 +89,7 @@ public class SelectLocation extends Activity implements LocationPopup.onLocation
             findViewById(R.id.select).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dialog.BuildDialog(SelectLocation.this,json);
+                    dialog.BuildDialog(SelectLocation.this, json);
                 }
             });
         }
@@ -91,20 +97,8 @@ public class SelectLocation extends Activity implements LocationPopup.onLocation
         {
             Toast.makeText(context,"Invalid Data Received",Toast.LENGTH_SHORT).show();
         }
-        if(StaticCatelog.getStringProperty(this,"location")==null) {
-            new Handler().postDelayed(new Runnable() {
+       // dialog.BuildDialog(SelectLocation.this, json);
 
-                @Override
-                public void run() {
-                    dialog.BuildDialog(SelectLocation.this, json);
-                }
-            }, 1000);
-        }
-        else
-        {
-            ((TextView)findViewById(R.id.select)).setText(StaticCatelog.getStringProperty(this,"location"));
-            start_activity();
-        }
     }
 
 
@@ -135,6 +129,7 @@ public class SelectLocation extends Activity implements LocationPopup.onLocation
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     VolleyLog.d("Error", "Error: " + error.getMessage());
+                    Toast.makeText(context,"Unable to get List of Locations",Toast.LENGTH_SHORT).show();
                 }
             });
             AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
