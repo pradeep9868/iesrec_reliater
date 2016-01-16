@@ -6,10 +6,12 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 
@@ -18,7 +20,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import co.jlabs.cersei_retailer.ActivityTransition.ActivityTransitionLauncher;
+import co.jlabs.cersei_retailer.custom_components.AddOrRemoveCart;
 import co.jlabs.cersei_retailer.custom_components.MyImageView;
+import co.jlabs.cersei_retailer.custom_components.Sqlite_cart;
+import co.jlabs.cersei_retailer.custom_components.TextView_Triangle;
 import co.jlabs.cersei_retailer.custom_components.VolleyImageInterface;
 
 /**
@@ -30,8 +35,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int VIEW_NORMAL = 1;
     private View headerView;
     ImageLoader imageLoader;
-    private FragmentEventHandler eventHandler;
     JSONArray json_offers;
+    Sqlite_cart cart;
+    Context context;
+    RecyclerAdapter adapter;
+    FragmentsEventInitialiser eventInitialiser;
 
 
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
@@ -42,18 +50,31 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            public View textView;
+            View gridItem;
+            TextView text;
+            View mask;
+            MyImageView Pic;
+            AddOrRemoveCart addOrRemoveCart;
 
             public ViewHolder(View v) {
                 super(v);
-                textView = v;
+                gridItem = v;
+                text=((TextView)v.findViewById(R.id.text));
+                Pic=(MyImageView) v.findViewById(R.id.pic);
+                mask=v.findViewById(R.id.mask);
+                addOrRemoveCart= (AddOrRemoveCart) v.findViewById(R.id.add_or_remove_cart);
             }
         }
 
-        public RecyclerAdapter(FragmentEventHandler eventHandler ,JSONArray json) {
-            this.eventHandler=eventHandler;
+
+
+        public RecyclerAdapter(Context context,JSONArray json,FragmentsEventInitialiser eventInitialiser) {
+            this.adapter=this;
             this.json_offers=json;
+            cart = new Sqlite_cart(context);
+            this.context=context;
             imageLoader = AppController.getInstance().getImageLoader();
+            this.eventInitialiser=eventInitialiser;
         }
 
         public void setHeader(View v) {
@@ -87,6 +108,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             } else {
                 View textView = LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_item, parent, false);
+
                 return new ViewHolder(textView);
             }
         }
@@ -99,84 +121,59 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 return;
             }
             else {
-                ViewHolder holder = (ViewHolder) viewHolder;
-                final View gridView = holder.textView;
-                MyImageView Pic= (MyImageView) gridView.findViewById(R.id.pic);
-                String s="";
+                final ViewHolder holder = (ViewHolder) viewHolder;
+                String s;
 
                 try {
                     s=((JSONObject) json_offers.get(position - 1)).getString("title")+"\n\n";
                     s=s+((JSONObject) json_offers.get(position - 1)).getString("weight")+"\n\n";
                     s=s+((JSONObject) json_offers.get(position - 1)).getString("price");
-                    ((TextView)gridView.findViewById(R.id.text)).setText(s);
-                    Pic.setImageUrl(((JSONObject) json_offers.get(position - 1)).getString("img"), imageLoader);
-                    Pic.setOnImageChangeListner(new VolleyImageInterface() {
+                    holder.text.setText(s);
+                    holder.Pic.setImageUrl(((JSONObject) json_offers.get(position - 1)).getString("img"), imageLoader);
+                    holder.Pic.setOnImageChangeListner(new VolleyImageInterface() {
                         @Override
                         public void adjustColor(int color) {
-                            gridView.findViewById(R.id.mask).setBackgroundColor(color);
+                            holder.mask.setBackgroundColor(color);
                         }
                     });
+                    holder.addOrRemoveCart.addOnItemClickListner(new AddOrRemoveCart.ItemsClickListener() {
+                        @Override
+                        public int addItemClicked(int position) {
+                            Toast.makeText(context, "Added To Cart", Toast.LENGTH_SHORT).show();
+                            int quantity=0;
+                            eventInitialiser.updateCart(true);
+                            try{
 
+                                quantity=cart.addToCart(((JSONObject) json_offers.get(position - 1)));
+                            }
+                            catch (Exception e)
+                            {
+
+                            }
+
+                            return quantity;
+                        }
+
+                        @Override
+                        public int removeItemClicked(int position) {
+                            Toast.makeText(context,"Removed From Cart",Toast.LENGTH_SHORT).show();
+                            int quantity=0;
+                            eventInitialiser.updateCart(false);
+                            try {
+                                quantity=cart.removeFromCart(((JSONObject) json_offers.get((position - 1))).getInt("offer_id"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            return quantity;
+                        }
+                    },position,cart.findIfOfferAlreadyExistsInCart(((JSONObject) json_offers.get((position - 1))).getInt("offer_id")));
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-//
-//                if(position%10==1)
-//                {
-//                    s= "20% off on Fortune Oil\n\n1.0L\n\nRs 80";
-//                    Pic.setImageUrl("http://agromantra.com/uploads/vendor/banner_31.jpg", imageLoader);
-//                }
-//                else if(position%10==2)
-//                {
-//                    s= "40% off on M.D.H\n\n500gm\n\nRs 120";
-//                    Pic.setImageUrl("http://martjackstorage.blob.core.windows.net/in-resources/8ebea48a-1ea1-4eba-987d-4f8ab57370a4/Images/ProductImages/Source/ID03082_100.jpg", imageLoader);
-//                }
-//                else if(position%10==3)
-//                {
-//                    s= "10% off on Curd Farm\n\n1.0L\n\nRs 80";
-//                    Pic.setImageUrl("http://www.bigbasket.com/media/uploads/p/s/40003162_1-milky-mist-curd-farm-fresh.jpg", imageLoader);
-//                }
-//                else if(position%10==4)
-//                {
-//                    s= "25% off on Colgate\n\n500gm\n\nRs 220";
-//                    Pic.setImageUrl("http://www.bigbasket.com/media/uploads/p/s/40001077_1-colgate-toothpaste-visible-white.jpg", imageLoader);
-//                }
-//                else if(position%10==5)
-//                {
-//                    s= "29% off on Lifebuoy\n\n1.0L\n\nRs 80";
-//                    Pic.setImageUrl("http://www.daangar.com/wp-content/uploads/2015/03/lifebuoy.jpg", imageLoader);
-//                }
-//                else if(position%10==6)
-//                {
-//                    s= "20% off on MatchBox\n\n5 pcs\n\nRs 25";
-//                    Pic.setImageUrl("http://www.bigbasket.com/media/uploads/p/s/40027412_1-home-lite-matchbox-big.jpg", imageLoader);
-//                }
-//                else if(position%10==7)
-//                {
-//                    s= "99% off on Scrubber\n\n1.0L\n\nRs 8";
-//                    Pic.setImageUrl("http://www.bigbasket.com/media/uploads/p/s/40003996_1-good-home-stainless-steel-scrubber-magnetic-grade.jpg", imageLoader);
-//                }
-//                else if(position%10==8)
-//                {
-//                    s= "20% off on Nescafe\n\n500gm\n\nRs 160";
-//                    Pic.setImageUrl("http://www.bigbasket.com/media/uploads/p/s/267376_2-nescafe-coffee-classic.jpg", imageLoader);
-//                }
-//                else if(position%10==9)
-//                {
-//                    s= "20% off on Parachute Oil\n\n350gm\n\nRs 180";
-//                    Pic.setImageUrl("http://p1.zopnow.com/images/products/320/parachute-parachute-advansed-coconut-hair-oil-300-ml.png", imageLoader);
-//                }
-//                else
-//                {
-//                    s= "20% off on Maggi\n\n500gm\n\nRs 120";
-//                    Pic.setImageUrl("http://www.quizified.in/uploads/266165_1-maggi-meri-masala.jpg", imageLoader);
-//                }
-
-
-                gridView.setOnClickListener(this);
-                gridView.setTag(position);
+                holder.gridItem.setOnClickListener(this);
+                holder.gridItem.setTag(position);
             }
         }
 
@@ -185,6 +182,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         //eventHandler.adjustCameraOrViewPager(false);
         Intent i = new Intent(v.getContext(),Details.class);
         i.putExtra("position",Integer.parseInt(v.getTag().toString()));
+        i.putExtra("offers",json_offers.toString());
         ActivityTransitionLauncher.with(getActivity(v)).from(v).launch(i);
         //v.getContext().startActivity(i);
     }

@@ -82,7 +82,7 @@ public class Fragment_Points extends Fragment  implements ScrollTabHolder, ViewP
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSmallBang = StarBang.attach2Window(getActivity());
-        fragVal = getArguments() != null ? getArguments().getInt("val") : 1;
+        fragVal = getArguments() != null ? getArguments().getInt("val") : 2;
     }
 
     @Override
@@ -208,35 +208,43 @@ public class Fragment_Points extends Fragment  implements ScrollTabHolder, ViewP
 
     @Override
     public void adjustCameraOrViewPager(boolean on) {
-        animateTextView(4145, 5273, (TextView) from_point);
-        ((TextView)to_point).setText("5273");
+//        animateTextView(4145, 5273, (TextView) from_point);
+//        ((TextView)to_point).setText("5273");
     }
 
     @Override
     public void startLoadbylocation(String location) {
         //here I will load Only first list that shows offers based on location
-        tellThatLoadedSuccessfully(true);
+        if(json==null)
+            download_information("");
+        else
+            tellThatLoadedSuccessfully(true);
     }
 
 
     private class PagerAdapter extends android.support.v4.view.PagerAdapter implements PagerSlidingStripPoints.IconTabProvider {
 
-        final String[] MOBILE_OS = new String[] {
-                "Android", "iOS","Windows", "Blackberry","Android", "iOS","Windows", "Blackberry" };
-        final String[] MOBILE_OS1 = new String[] {
-                "Android", "iOS","Windows" };
-        final String[] MOBILE_OS2 = new String[] {
-                "Android", "iOS","Windows", "Blackberry","Android", "iOS","Windows", "Blackberry", "iOS","Windows", "Blackberry","Android", "iOS","Windows", "Blackberry" };
-        private String tabIcons[] = {"10\n\nRewards", "2458\n\nPoints Earned","1280\n\nPoints Redeemed"};
+        String num_rewards;
+        String num_points_earned;
+        String num_points_redeemed;
+        JSONArray rewards;
+        JSONArray points_earned;
+        JSONArray points_redeemed;
 
         private SparseArrayCompat<ScrollTabHolder> mScrollTabHolders;
         private ScrollTabHolder mListener;
         Context context;
 
-        PagerAdapter(Context context)
+        PagerAdapter(Context context,String num_rewards,String num_points_earned,String num_points_redeemed,JSONArray rewards,JSONArray points_earned,JSONArray points_redeemed)
         {
             mScrollTabHolders = new SparseArrayCompat<ScrollTabHolder>();
             this.context=context;
+            this.num_rewards=num_rewards;
+            this.num_points_earned=num_points_earned;
+            this.num_points_redeemed=num_points_redeemed;
+            this.rewards=rewards;
+            this.points_earned=points_earned;
+            this.points_redeemed=points_redeemed;
         }
 
         public int getCount() {
@@ -259,16 +267,16 @@ public class Fragment_Points extends Fragment  implements ScrollTabHolder, ViewP
             }
             switch (position) {
                 default:
-                    lv.setAdapter(new AdapterReward_Redeemed(context, MOBILE_OS,0));
+                    lv.setAdapter(new AdapterReward_Redeemed(context, rewards,0));
                     break;
                 case 0:
-                    lv.setAdapter(new AdapterReward_Redeemed(context, MOBILE_OS,0));
+                    lv.setAdapter(new AdapterReward_Redeemed(context, rewards,0));
                     break;
                 case 1:
-                    lv.setAdapter(new AdapterPointsEarned(context, MOBILE_OS1));
+                    lv.setAdapter(new AdapterPointsEarned(context, points_earned));
                     break;
                 case 2:
-                    lv.setAdapter(new AdapterReward_Redeemed(context, MOBILE_OS2,1));
+                    lv.setAdapter(new AdapterReward_Redeemed(context, points_redeemed,1));
                     break;
             }
 
@@ -279,7 +287,13 @@ public class Fragment_Points extends Fragment  implements ScrollTabHolder, ViewP
 
         @Override
         public String getPageIconResId(int position) {
-            return tabIcons[position];
+            switch (position)
+            {
+                case 0: return num_rewards+"\n\nRewards";
+                case 1: return num_points_earned+"\n\nPoints Earned";
+                case 2: return num_points_redeemed+"\n\nPoints Redeemed";
+                default:return num_rewards+"\n\nRewards";
+            }
         }
 
         @Override
@@ -390,7 +404,7 @@ public class Fragment_Points extends Fragment  implements ScrollTabHolder, ViewP
     public void onResume() {
         super.onResume();
         if(eventInitialiser!=null)
-            eventInitialiser.registerMyevent(3,this);
+            eventInitialiser.registerMyevent(fragVal,this);
         download_information("");
 
     }
@@ -403,7 +417,7 @@ public class Fragment_Points extends Fragment  implements ScrollTabHolder, ViewP
             @Override
             public void run() {
                 if (eventInitialiser != null)
-                    eventInitialiser.MyloadingCompleted(3, successfull);
+                    eventInitialiser.MyloadingCompleted(fragVal, successfull);
             }
         }, 1000);
 
@@ -413,8 +427,8 @@ public class Fragment_Points extends Fragment  implements ScrollTabHolder, ViewP
 
         String tag_json_obj = "json_obj_req_my_earnings";
 
-        Log.i("Myapp", "Calling url " + url);
         if(json==null) {
+            Log.i("Myapp", "Calling url " + url);
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                     url, null,
                     new Response.Listener<JSONObject>() {
@@ -423,7 +437,7 @@ public class Fragment_Points extends Fragment  implements ScrollTabHolder, ViewP
                         public void onResponse(final JSONObject response) {
                             json = response;
                             try {
-                                createcontentforthispage(json.getJSONObject("extra").getString("total_balance"), json.getJSONObject("extra").getString("total_rewards"), json.getJSONObject("extra").getString("total_earnings"), json.getJSONObject("extra").getString("total_redeemed"), json.getJSONArray("rewards"), json.getJSONArray("earning"), json.getJSONArray("history"));
+                                createcontentforthispage(json.getJSONObject("extra").getString("total_balance"), json.getJSONObject("extra").getString("total_rewards"), json.getJSONObject("extra").getString("total_earning"), json.getJSONObject("extra").getString("total_redeemed"), json.getJSONArray("rewards"), json.getJSONArray("earning"), json.getJSONArray("history"));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                                 tellThatLoadedSuccessfully(false);
@@ -443,9 +457,10 @@ public class Fragment_Points extends Fragment  implements ScrollTabHolder, ViewP
         else
         {
             try {
-                createcontentforthispage(json.getJSONObject("extra").getString("total_balance"), json.getJSONObject("extra").getString("total_rewards"), json.getJSONObject("extra").getString("total_earnings"), json.getJSONObject("extra").getString("total_redeemed"), json.getJSONArray("rewards"), json.getJSONArray("earning"), json.getJSONArray("history"));
+                createcontentforthispage(json.getJSONObject("extra").getString("total_balance"), json.getJSONObject("extra").getString("total_rewards"), json.getJSONObject("extra").getString("total_earning"), json.getJSONObject("extra").getString("total_redeemed"), json.getJSONArray("rewards"), json.getJSONArray("earning"), json.getJSONArray("history"));
             } catch (JSONException e) {
                 e.printStackTrace();
+                tellThatLoadedSuccessfully(false);
             }
         }
     }
@@ -453,13 +468,15 @@ public class Fragment_Points extends Fragment  implements ScrollTabHolder, ViewP
     public void createcontentforthispage(String total_balance,String num_rewards,String num_points_earned,String num_points_redeemed,JSONArray rewards,JSONArray points_earned,JSONArray points_redeemed)
     {
 
-        mPagerAdapter = new PagerAdapter(getContext());
+        mPagerAdapter = new PagerAdapter(getContext(),num_rewards,num_points_earned,num_points_redeemed,rewards,points_earned,points_redeemed);
         mPagerAdapter.setTabHolderScrollingContent(this);
 
         mViewPager.setAdapter(mPagerAdapter);
 
         mPagerSlidingTabStrip.setViewPager(mViewPager);
         mPagerSlidingTabStrip.setOnPageChangeListener(this);
+        animateTextView(100, Integer.parseInt(total_balance), (TextView) from_point);
+        ((TextView)to_point).setText(total_balance);
         mLastY=0;
         tellThatLoadedSuccessfully(true);
     }

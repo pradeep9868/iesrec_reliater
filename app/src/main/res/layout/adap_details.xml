@@ -24,6 +24,7 @@
         android:textColor="@color/black"
         android:text="15% off on Maggi Noodles"/>
     <TextView
+        android:id="@+id/price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
@@ -41,34 +42,11 @@
             android:textSize="18sp"
             android:gravity="center"
             android:text="@string/ico_myorder"/>
-        <LinearLayout
+        <co.jlabs.cersei_retailer.custom_components.AddOrRemoveCart
+            android:id="@+id/add_or_remove_cart"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="horizontal"
-            android:layout_marginRight="10dp"
-            android:gravity="right">
-            <co.jlabs.cersei_retailer.custom_components.TextView_Black
-                android:layout_width="25dp"
-                android:layout_height="30dp"
-                android:textSize="18sp"
-                android:gravity="center"
-                android:text="@string/ico_remove"/>
-            <TextView
-                android:layout_width="25dp"
-                android:layout_height="30dp"
-                android:textSize="18sp"
-                android:gravity="center"
-                android:textColor="@color/black"
-                android:text="2"/>
-            <co.jlabs.cersei_retailer.custom_components.TextView_Black
-                android:layout_width="25dp"
-                android:layout_height="30dp"
-                android:background="#ffff"
-                android:textSize="18sp"
-                android:gravity="center"
-                android:text="@string/ico_add"/>
-        </LinearLayout>
+            android:layout_height="wrap_content"/>
     </LinearLayout>
     <TextView
         android:layout_width="match_parent"

@@ -62,32 +62,10 @@
                     android:gravity="center"
                     android:textSize="20sp"
                     android:text="@string/ico_myorder"/>
-                <LinearLayout
+                <co.jlabs.cersei_retailer.custom_components.AddOrRemoveCart
+                    android:id="@+id/add_or_remove_cart"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginRight="10dp"
-                    android:gravity="right|center_vertical">
-                    <co.jlabs.cersei_retailer.custom_components.TextView_Black
-                        android:layout_width="30dp"
-                        android:layout_height="35dp"
-                        android:textSize="20sp"
-                        android:gravity="center"
-                        android:text="@string/ico_remove"/>
-                    <TextView
-                        android:layout_width="25dp"
-                        android:layout_height="30dp"
-                        android:textSize="18sp"
-                        android:gravity="center"
-                        android:text="2"/>
-                    <co.jlabs.cersei_retailer.custom_components.TextView_Black
-                        android:layout_width="30dp"
-                        android:layout_height="35dp"
-                        android:background="#ffff"
-                        android:textSize="20sp"
-                        android:gravity="center"
-                        android:text="@string/ico_add"/>
-                </LinearLayout>
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
         </LinearLayout>
         <co.jlabs.cersei_retailer.custom_components.MyLinearLayout

@@ -16,12 +16,13 @@
         android:orientation="horizontal"
         android:padding="10dp"
         android:background="@color/white">
-        <ImageView
-            android:id="@+id/image"
+        <co.jlabs.cersei_retailer.custom_components.MyImageView
+            android:id="@+id/pic"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:background="@color/colorAccent"/>
-    <LinearLayout
+            android:scaleType="fitXY" />
+
+        <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -34,18 +35,20 @@
             android:gravity="center"
             android:orientation="horizontal">
             <TextView
+                android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Coconut Hair Oil"/>
             <co.jlabs.cersei_retailer.custom_components.TextView_Appcolor
-                android:id="@+id/staricon"
+                android:id="@+id/close"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
                 android:text="@string/ico_cross"/>
         </LinearLayout>
         <TextView
+            android:id="@+id/weight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -58,44 +61,24 @@
             android:orientation="horizontal"
             android:layout_height="40dp">
             <TextView
+                android:id="@+id/price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="5dp"
                 android:text="Rs 180"/>
-            <LinearLayout
+            <co.jlabs.cersei_retailer.custom_components.AddOrRemoveCart
+                android:id="@+id/add_or_remove_cart"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:layout_marginRight="10dp"
-                android:gravity="right">
-                <co.jlabs.cersei_retailer.custom_components.TextView_Black
-                    android:layout_width="25dp"
-                    android:layout_height="30dp"
-                    android:textSize="18sp"
-                    android:gravity="center"
-                    android:text="@string/ico_remove"/>
-                <TextView
-                    android:layout_width="25dp"
-                    android:layout_height="30dp"
-                    android:textSize="18sp"
-                    android:gravity="center"
-                    android:text="2"/>
-                <co.jlabs.cersei_retailer.custom_components.TextView_Black
-                    android:layout_width="25dp"
-                    android:layout_height="30dp"
-                    android:background="#ffff"
-                    android:textSize="18sp"
-                    android:gravity="center"
-                    android:text="@string/ico_add"/>
-            </LinearLayout>
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
     </LinearLayout>
 
     </LinearLayout>
         <co.jlabs.cersei_retailer.custom_components.TextView_Triangle
+            android:id="@+id/points"
             android:layout_gravity="top"
             android:layout_width="58dp"
             android:layout_height="20dp"

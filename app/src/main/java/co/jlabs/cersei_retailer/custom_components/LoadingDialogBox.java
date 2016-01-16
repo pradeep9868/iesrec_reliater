@@ -34,6 +34,8 @@ public class LoadingDialogBox extends Dialog {
     public void setUpLayout()
     {
         setContentView(R.layout.lay_loading);
+        setCancelable(false);
+        setCanceledOnTouchOutside(false);
         show();
     }
 

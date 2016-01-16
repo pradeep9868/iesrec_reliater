@@ -130,6 +130,7 @@ public class LocationPopup extends Dialog {
 
             }
         });
+
         show();
     }
 

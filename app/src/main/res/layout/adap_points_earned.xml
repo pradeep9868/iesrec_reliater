@@ -23,9 +23,10 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:textSize="16dp"
-            android:text="@string/rating"
+            android:text="♥"
             android:textColor="@color/orange_dark"/>
         <TextView
+            android:id="@+id/title"
             android:layout_marginLeft="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -40,15 +41,20 @@
             android:text="@string/rating"
             android:textColor="@color/orange_dark"/>
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/points"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:textSize="14sp"
+            android:layout_marginLeft="5dp"
             android:layout_marginRight="14dp"
             android:textColor="@color/green"
             android:text="+250"/>
-        <ImageView android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_lock_idle_lock"/>
+        <co.jlabs.cersei_retailer.custom_components.TextView_Black
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:textSize="22sp"
+            android:text="@string/ico_next_ico"/>
 
     </LinearLayout>
 

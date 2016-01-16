@@ -38,17 +38,11 @@ public class SelectLocation extends Activity implements LocationPopup.onLocation
         context=this;
        // getLocation();
         if(StaticCatelog.getStringProperty(this,"location")==null) {
-            new Handler().postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
                     download_locations();
-                }
-            }, 1000);
         }
         else
         {
-            ((TextView)findViewById(R.id.select)).setText(StaticCatelog.getStringProperty(this,"location"));
+            ((TextView)findViewById(R.id.select)).setText(StaticCatelog.getStringProperty(this, "location"));
             start_activity();
         }
     }
@@ -82,22 +76,24 @@ public class SelectLocation extends Activity implements LocationPopup.onLocation
         } catch (JSONException e) {
             success=0;
         }
-        dialog = new LocationPopup(context, R.style.alert_dialog);
+        if(dialog==null)
+            dialog = new LocationPopup(context, R.style.alert_dialog);
 
         if(success==1)
         {
             findViewById(R.id.select).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dialog.BuildDialog(SelectLocation.this, json);
+                    if(!dialog.isShowing())
+                        dialog.BuildDialog(SelectLocation.this, json);
                 }
             });
+            dialog.BuildDialog(SelectLocation.this, json);
         }
         else
         {
             Toast.makeText(context,"Invalid Data Received",Toast.LENGTH_SHORT).show();
         }
-       // dialog.BuildDialog(SelectLocation.this, json);
 
     }
 

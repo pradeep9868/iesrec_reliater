@@ -8,15 +8,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class AdapterPointsEarned extends BaseAdapter {
     private Context context;
-    private final String[] mobileValues;
+    private JSONArray jsonArray;
 
-    public AdapterPointsEarned(Context context, String[] mobileValues) {
+    public AdapterPointsEarned(Context context, JSONArray jsonArray) {
         this.context = context;
-        this.mobileValues = mobileValues;
+        this.jsonArray = jsonArray;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -33,13 +38,19 @@ public class AdapterPointsEarned extends BaseAdapter {
         } else {
             gridView = (View) convertView;
         }
+        try {
+            ((TextView)gridView.findViewById(R.id.title)).setText(((JSONObject)jsonArray.get(position)).getString("title"));
+            ((TextView)gridView.findViewById(R.id.points)).setText(((JSONObject) jsonArray.get(position)).getString("points"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         return gridView;
     }
 
     @Override
     public int getCount() {
-        return mobileValues.length;
+        return jsonArray.length();
     }
 
     @Override

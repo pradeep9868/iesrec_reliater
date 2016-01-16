@@ -31,14 +31,22 @@ import org.json.JSONObject;
 
 import co.jlabs.cersei_retailer.custom_components.LoadingDialogBox;
 import co.jlabs.cersei_retailer.custom_components.LocationPopup;
+import co.jlabs.cersei_retailer.custom_components.NoInternetDialogBox;
 import co.jlabs.cersei_retailer.custom_components.PagerSlidingStrip;
 import co.jlabs.cersei_retailer.custom_components.PagerSlidingStrip.IconTabProvider;
 import co.jlabs.cersei_retailer.custom_components.SmallBang;
 import co.jlabs.cersei_retailer.custom_components.SmallBangListener;
+import co.jlabs.cersei_retailer.custom_components.Sqlite_cart;
+import co.jlabs.cersei_retailer.custom_components.TabsView;
 
 
-public class MainDashboard extends FragmentActivity implements View.OnClickListener,FragmentsEventInitialiser, LocationPopup.onLocationSelected{
+public class MainDashboard extends FragmentActivity implements View.OnClickListener,FragmentsEventInitialiser, LocationPopup.onLocationSelected,NoInternetDialogBox.onReloadPageSelected{
     static final int ITEMS = 4;
+    static final int page_offers=0;
+    static final int page_points=1;
+    static final int page_barcode=2;
+    static final int page_cart=3;
+
     MyAdapter mAdapter;
     ViewPager mPager;
     PagerSlidingStrip strip;
@@ -47,12 +55,14 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
     View selectLocation;
     LocationPopup dialog;
     JSONObject json=null;
-    FragmentEventHandler ViewpagerHandler=null,CameraHandler=null,ScoreHandler=null,cartHandler=null;
+    FragmentEventHandler ViewpagerHandler=null,CameraHandler=null,ScoreHandler=null,CartHandler=null;
     LoadingDialogBox loadingDialogBox;
     Boolean loaded_first_page,loaded_second_page,loaded_third_page,loaded_forth_page;
     Boolean was_success_loaded_first_page,was_success_loaded_second_page,was_success_loaded_third_page,was_success_loaded_forth_page;
 
     String url = StaticCatelog.geturl()+"cersei/location";
+
+    NoInternetDialogBox noInternetDialogBox=null;
 
 
     @Override
@@ -69,7 +79,6 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
         toggle.syncState();
         loadingDialogBox= new LoadingDialogBox(this, R.style.alert_dialog);
         selectLocation.setOnClickListener(this);
-
         ((TextView)selectLocation.findViewById(R.id.text_location)).setText(StaticCatelog.getStringProperty(this,"location"));
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -95,21 +104,21 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
 
             @Override
             public void onPageSelected(int position) {
-                if (position == 0) {
+                if (position == page_offers) {
                     ViewpagerHandler.adjustCameraOrViewPager(true);
                 } else
                     ViewpagerHandler.adjustCameraOrViewPager(false);
-
-
-                if (position == 1)
+                if (position == page_points) {
+                    redText(tab_point);
+                    ScoreHandler.adjustCameraOrViewPager(true);
+                }
+                if (position == page_barcode)
                     CameraHandler.adjustCameraOrViewPager(true);
                 else
                     CameraHandler.adjustCameraOrViewPager(false);
-
-
-                if (position == 2) {
-                    redText(tab_point);
-                    ScoreHandler.adjustCameraOrViewPager(true);
+                if(position==page_cart) {
+                    CartHandler.adjustCameraOrViewPager(true);
+                    ((TabsView)tab_cart).removeCartNotification();
                 }
             }
 
@@ -119,8 +128,8 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
             }
         });
 
-        tab_point = strip.returntab(2);
-        tab_cart = strip.returntab(3);
+        tab_point = strip.returntab(page_points);
+        tab_cart = strip.returntab(page_cart);
         update_ui_for_location();
     }
 
@@ -189,24 +198,24 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
     @Override
     public void registerMyevent(int position, FragmentEventHandler eventHandler) {
         Log.i("Myapp", "Successfully registered event for " + position);
-        if(position==1)
+        if(position==page_offers)
             ViewpagerHandler=eventHandler;
-        else if(position==2)
-            CameraHandler=eventHandler;
-        else if(position==3)
+        else if(position==page_points)
             ScoreHandler=eventHandler;
-        else if(position==4)
-            cartHandler=eventHandler;
+        else if(position==page_barcode)
+            CameraHandler=eventHandler;
+        else if(position==page_cart)
+            CartHandler=eventHandler;
     }
 
     @Override
     public void MyloadingCompleted(int position,Boolean successfull) {
         switch (position)
         {
-            case 1: loaded_first_page=true; was_success_loaded_first_page=successfull; break;
-            case 2: loaded_second_page=true; was_success_loaded_second_page=successfull; break;
-            case 3: loaded_third_page=true; was_success_loaded_third_page=successfull; break;
-            case 4: loaded_forth_page=true; was_success_loaded_forth_page=successfull; break;
+            case page_offers: loaded_first_page=true; was_success_loaded_first_page=successfull; break;
+            case page_points: loaded_second_page=true; was_success_loaded_second_page=successfull; break;
+            case page_barcode: loaded_third_page=true; was_success_loaded_third_page=successfull; break;
+            case page_cart: loaded_forth_page=true; was_success_loaded_forth_page=successfull; break;
         }
         if(loaded_first_page&&loaded_second_page&&loaded_third_page&&loaded_forth_page)
         {
@@ -214,10 +223,20 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
         }
     }
 
+    @Override
+    public void updateCart(Boolean add) {
+        ((TabsView)tab_cart).giveCartNotification(add);
+    }
+
+    @Override
+    public void Reload_No_Internet() {
+        update_ui_for_location_withevent(StaticCatelog.getStringProperty(this,"location"));
+    }
+
 
     public class MyAdapter extends FragmentPagerAdapter implements IconTabProvider {
 
-        private int tabIcons[] = {R.string.ico_home, R.string.ico_qr_code,R.string.rating, R.string.ico_cart};
+        private int tabIcons[] = {R.string.ico_home,R.string.rating, R.string.ico_qr_code, R.string.ico_cart};
 
 
         public MyAdapter(FragmentManager fragmentManager) {
@@ -234,19 +253,18 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-                case 0 :
-
+                case page_offers :
                     Fragment_Offers firstPage = Fragment_Offers.init(position);
                     firstPage.addInitialisationEvent(MainDashboard.this);
                     return firstPage;
-                case 1 :
-                    Fragment_Barcode fragment= Fragment_Barcode.init(position);
-                    fragment.addInitialisationEvent(MainDashboard.this);
-                    return fragment;
-                case 2 :
+                case page_points :
                     Fragment_Points pointsFragment = Fragment_Points.init(position);
                     pointsFragment.addInitialisationEvent(MainDashboard.this);
                     return pointsFragment;
+                case page_barcode :
+                    Fragment_Barcode fragment= Fragment_Barcode.init(position);
+                    fragment.addInitialisationEvent(MainDashboard.this);
+                    return fragment;
                 default:
                     Fragment_Cart cartFragment = Fragment_Cart.init(position);
                     cartFragment.addInitialisationEvent(MainDashboard.this);
@@ -301,7 +319,7 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
         ViewpagerHandler.startLoadbylocation(location);
         CameraHandler.startLoadbylocation(location);
         ScoreHandler.startLoadbylocation(location);
-        cartHandler.startLoadbylocation(location);
+        CartHandler.startLoadbylocation(location);
         update_ui_for_location();
     }
 
@@ -310,13 +328,6 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
         loadingDialogBox.setUpLayout();
         reset_loaded_fragments();
 
-//        new Handler().postDelayed(new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                end_update_ui_for_location();
-//            }
-//        }, 1000);
 
     }
 
@@ -347,6 +358,11 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
             if(!was_success_loaded_forth_page)
                 s=s+" Fourth ";
             Toast.makeText(this,"An Error occurred during loading data for page:"+s,Toast.LENGTH_SHORT).show();
+
+            if(noInternetDialogBox==null)
+                noInternetDialogBox= new NoInternetDialogBox(this, R.style.alert_dialog);
+            noInternetDialogBox.setUpLayout(this);
+
         }
     }
 
@@ -358,11 +374,12 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
         } catch (JSONException e) {
             success=0;
         }
-        dialog = new LocationPopup(this, R.style.alert_dialog);
+        if(dialog==null)
+         dialog = new LocationPopup(this, R.style.alert_dialog);
 
         if(success==1)
-        {
-            dialog.BuildDialog(MainDashboard.this, json);
+        {   if(!dialog.isShowing())
+                dialog.BuildDialog(MainDashboard.this, json);
         }
         else
         {
@@ -384,6 +401,7 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
 
         Log.i("Myapp", "Calling url " + url);
         if(json==null) {
+            Toast.makeText(this,"Fetching Locations Please Wait...",Toast.LENGTH_SHORT).show();
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                     url, null,
                     new Response.Listener<JSONObject>() {
@@ -405,6 +423,7 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     VolleyLog.d("Error", "Error: " + error.getMessage());
+                    Toast.makeText(MainDashboard.this,"Error! During fetching locations",Toast.LENGTH_SHORT).show();
                 }
             });
             AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);

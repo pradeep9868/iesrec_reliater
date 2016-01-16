@@ -85,7 +85,7 @@ public class PagerSlidingStrip extends HorizontalScrollView {
 
     private Locale locale;
 
-    private ArrayList<TextView_Appcolor> tv;
+    private ArrayList<TabsView> tv;
 
     public PagerSlidingStrip(Context context) {
 
@@ -228,9 +228,7 @@ public class PagerSlidingStrip extends HorizontalScrollView {
 
     private void addIconTab(final int position, int resId) {
 
-        //ImageButton tab = new ImageButton(getContext());
-        //tab.setImageResource(resId);
-        TextView_Appcolor tab = new TextView_Appcolor(getContext());
+        TabsView tab = new TabsView(getContext());
         tab.setText(getContext().getResources().getString(resId));
         tab.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
         tab.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -248,7 +246,6 @@ public class PagerSlidingStrip extends HorizontalScrollView {
                 pager.setCurrentItem(position);
             }
         });
-
         tab.setPadding(tabPadding, 0, tabPadding, 0);
         tabsContainer.addView(tab, position, shouldExpand ? expandedTabLayoutParams : defaultTabLayoutParams);
     }

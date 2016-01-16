@@ -98,7 +98,7 @@ final class InactivityTimer {
       try {
         Thread.sleep(INACTIVITY_DELAY_MS);
         Log.i(TAG, "Finishing activity due to inactivity");
-        activity.finish();
+      //  activity.finish();
       } catch (InterruptedException e) {
         // continue without killing
       }

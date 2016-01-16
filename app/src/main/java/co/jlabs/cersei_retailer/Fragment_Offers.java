@@ -25,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import co.jlabs.cersei_retailer.custom_components.AutoScrollViewPager;
+import co.jlabs.cersei_retailer.custom_components.Sqlite_cart;
 import co.jlabs.cersei_retailer.custom_components.transforms.*;
 
 
@@ -49,7 +50,7 @@ public class Fragment_Offers extends Fragment implements FragmentEventHandler {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fragVal = getArguments() != null ? getArguments().getInt("val") : 1;
+        fragVal = getArguments() != null ? getArguments().getInt("val") : 0;
     }
 
     @Override
@@ -157,7 +158,7 @@ public class Fragment_Offers extends Fragment implements FragmentEventHandler {
     public void onResume() {
         super.onResume();
         if(eventInitialiser!=null)
-            eventInitialiser.registerMyevent(1,this);
+            eventInitialiser.registerMyevent(fragVal,this);
         if(json==null)
             download_offers(StaticCatelog.getStringProperty(getContext(),"location"));
 
@@ -171,7 +172,7 @@ public class Fragment_Offers extends Fragment implements FragmentEventHandler {
             @Override
             public void run() {
                 if (eventInitialiser != null)
-                    eventInitialiser.MyloadingCompleted(1,successfull);
+                    eventInitialiser.MyloadingCompleted(fragVal,successfull);
             }
         }, 1000);
 
@@ -224,6 +225,7 @@ public class Fragment_Offers extends Fragment implements FragmentEventHandler {
                 show_offers(json.getJSONArray("banners"),json.getJSONArray("offers"));
             } catch (JSONException e) {
                 e.printStackTrace();
+                tellThatLoadedSuccessfully(false);
             }
         }
     }
@@ -231,7 +233,7 @@ public class Fragment_Offers extends Fragment implements FragmentEventHandler {
     public void show_offers(JSONArray banners,JSONArray offers)
     {
 
-        final RecyclerAdapter elementsAdapter = new RecyclerAdapter(this,offers);
+        final RecyclerAdapter elementsAdapter = new RecyclerAdapter(getContext(),offers,eventInitialiser);
         elementsAdapter.setHeader(header);
 
         CustomPagerAdapter adapter = new CustomPagerAdapter(getContext(),banners);

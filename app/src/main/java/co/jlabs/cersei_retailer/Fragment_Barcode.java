@@ -32,7 +32,7 @@ public class Fragment_Barcode extends BarCodeScannerFragment implements Fragment
     }
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fragVal = getArguments() != null ? getArguments().getInt("val") : 1;
+        fragVal = getArguments() != null ? getArguments().getInt("val") : 2;
         barcodeFragment=this;
         dialog = new CustomDialogBox(getContext(),R.style.Theme_Dialog);
 
@@ -117,7 +117,7 @@ public class Fragment_Barcode extends BarCodeScannerFragment implements Fragment
     public void onResume() {
         super.onResume();
         if(eventInitialiser!=null)
-            eventInitialiser.registerMyevent(2,this);
+            eventInitialiser.registerMyevent(fragVal,this);
         tellThatLoadedSuccessfully();
     }
 
@@ -128,7 +128,7 @@ public class Fragment_Barcode extends BarCodeScannerFragment implements Fragment
             @Override
             public void run() {
                 if (eventInitialiser != null)
-                    eventInitialiser.MyloadingCompleted(2,true);
+                    eventInitialiser.MyloadingCompleted(fragVal,true);
             }
         }, 1000);
 
