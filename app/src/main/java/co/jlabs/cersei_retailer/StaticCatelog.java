@@ -3,6 +3,10 @@ package co.jlabs.cersei_retailer;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.style.AbsoluteSizeSpan;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -63,5 +67,37 @@ public class StaticCatelog {
     {
         //return "http://192.168.0.13:8000/";
         return "http://lannister-api.elasticbeanstalk.com/";
+    }
+    public static CharSequence SpanIt(String text1,String text2)
+    {
+
+        SpannableString span1 = new SpannableString(text1);
+        span1.setSpan(new AbsoluteSizeSpan(30), 0, text1.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+
+        SpannableString span2 = new SpannableString(text2);
+        span2.setSpan(new AbsoluteSizeSpan(20), 0, text2.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        return TextUtils.concat(span1,"\n\n", span2);
+    }
+    public static CharSequence SpanIt2(String text1,String text2,String text3)
+    {
+
+        String enter ="\n\n";
+
+        SpannableString span1 = new SpannableString(text1);
+        span1.setSpan(new AbsoluteSizeSpan(30), 0, text1.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+
+        SpannableString span2 = new SpannableString(text2);
+        span2.setSpan(new AbsoluteSizeSpan(23), 0, text2.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+
+        SpannableString span3 = new SpannableString(text3);
+        span3.setSpan(new AbsoluteSizeSpan(23), 0, text3.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+
+        SpannableString enter1 = new SpannableString(enter);
+        enter1.setSpan(new AbsoluteSizeSpan(15), 0, enter.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+
+        SpannableString enter2 = new SpannableString(enter);
+        enter2.setSpan(new AbsoluteSizeSpan(3), 0, enter.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+
+        return TextUtils.concat(span1,enter1, span2,enter2,span3);
     }
 }

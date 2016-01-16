@@ -63,6 +63,8 @@ public class Fragment_Cart extends Fragment implements FragmentEventHandler{
 
             }
         };
+        View no_item_cart_view = layoutView.findViewById(R.id.emptycartview);
+        lv.setEmptyView(no_item_cart_view);
         Adapter_Cart adapter_cart = new Adapter_Cart(getContext(),items,handler);
         lv.setAdapter(adapter_cart);
 

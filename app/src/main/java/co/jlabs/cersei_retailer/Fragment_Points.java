@@ -32,6 +32,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Iterator;
+
 import co.jlabs.cersei_retailer.custom_components.PagerSlidingStripPoints;
 import co.jlabs.cersei_retailer.custom_components.SampleListView;
 import co.jlabs.cersei_retailer.custom_components.ScrollTabHolder;
@@ -65,7 +67,7 @@ public class Fragment_Points extends Fragment  implements ScrollTabHolder, ViewP
     private AccelerateDecelerateInterpolator mSmoothInterpolator;
 
     View from_balance,to_balance,from_point,to_point,from_rating,to_rating;
-    String url = StaticCatelog.geturl()+"cersei/reward";
+    String url = StaticCatelog.geturl()+"cersei/consumer/reward?userid=user_1";
     JSONObject json=null;
 
 
@@ -155,7 +157,7 @@ public class Fragment_Points extends Fragment  implements ScrollTabHolder, ViewP
             currentHolder.adjustScroll(mHeader.getHeight()-mLastY);
             mHeader.postInvalidate();
         }else{
-            currentHolder.adjustScroll((int) (mHeader.getHeight() +mHeader.getTranslationY()));
+            currentHolder.adjustScroll((int) (mHeader.getHeight() + mHeader.getTranslationY()));
         }
     }
 
@@ -286,13 +288,13 @@ public class Fragment_Points extends Fragment  implements ScrollTabHolder, ViewP
         }
 
         @Override
-        public String getPageIconResId(int position) {
+        public CharSequence getPageIconResId(int position) {
             switch (position)
             {
-                case 0: return num_rewards+"\n\nRewards";
-                case 1: return num_points_earned+"\n\nPoints Earned";
-                case 2: return num_points_redeemed+"\n\nPoints Redeemed";
-                default:return num_rewards+"\n\nRewards";
+                case 0: return StaticCatelog.SpanIt(num_rewards,"Rewards");
+                case 1: return StaticCatelog.SpanIt(num_points_earned,"Points Earned");
+                case 2: return StaticCatelog.SpanIt(num_points_redeemed,"Points Redeemed");
+                default:return StaticCatelog.SpanIt(num_rewards,"Rewards");
             }
         }
 
@@ -435,17 +437,15 @@ public class Fragment_Points extends Fragment  implements ScrollTabHolder, ViewP
 
                         @Override
                         public void onResponse(final JSONObject response) {
-                            json = response;
                             try {
-                                createcontentforthispage(json.getJSONObject("extra").getString("total_balance"), json.getJSONObject("extra").getString("total_rewards"), json.getJSONObject("extra").getString("total_earning"), json.getJSONObject("extra").getString("total_redeemed"), json.getJSONArray("rewards"), json.getJSONArray("earning"), json.getJSONArray("history"));
+                                json = response.getJSONObject("data");
+                                createcontentforthispage(json.getString("total_balance"), "" + ((JSONArray) json.getJSONArray("active_rewards")).length(), json.getString("earning"), json.getString("total_redeemed"), json.getJSONArray("active_rewards"), json.getJSONArray("earning_list"), json.getJSONArray("redeemed"));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                                 tellThatLoadedSuccessfully(false);
                             }
                         }
                     }, new Response.ErrorListener() {
-
-
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     VolleyLog.d("Error", "Error: " + error.getMessage());
@@ -457,7 +457,7 @@ public class Fragment_Points extends Fragment  implements ScrollTabHolder, ViewP
         else
         {
             try {
-                createcontentforthispage(json.getJSONObject("extra").getString("total_balance"), json.getJSONObject("extra").getString("total_rewards"), json.getJSONObject("extra").getString("total_earning"), json.getJSONObject("extra").getString("total_redeemed"), json.getJSONArray("rewards"), json.getJSONArray("earning"), json.getJSONArray("history"));
+                createcontentforthispage(json.getString("total_balance"), ""+((JSONArray)json.getJSONArray("active_rewards")).length(), json.getString("earning"), json.getString("total_redeemed"), json.getJSONArray("active_rewards"), json.getJSONArray("earning_list"), json.getJSONArray("redeemed"));
             } catch (JSONException e) {
                 e.printStackTrace();
                 tellThatLoadedSuccessfully(false);

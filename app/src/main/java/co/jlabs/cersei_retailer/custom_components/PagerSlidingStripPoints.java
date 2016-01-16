@@ -33,7 +33,7 @@ import co.jlabs.cersei_retailer.R;
 public class PagerSlidingStripPoints extends HorizontalScrollView {
 
     public interface IconTabProvider {
-        public String getPageIconResId(int position);
+        public CharSequence getPageIconResId(int position);
     }
 
     // @formatter:off
@@ -68,8 +68,8 @@ public class PagerSlidingStripPoints extends HorizontalScrollView {
     private boolean textAllCaps = true;
 
     private int scrollOffset = 52;
-    private int indicatorHeight = 4;
-    private int underlineHeight = 1;
+    private int indicatorHeight = 10;
+    private int underlineHeight = 7;
     private int dividerPadding = 12;
     private int tabPadding = 24;
     private int dividerWidth = 1;
@@ -222,7 +222,7 @@ public class PagerSlidingStripPoints extends HorizontalScrollView {
         addTab(position, tab);
     }
 
-    private void addIconTab(final int position, String resId) {
+    private void addIconTab(final int position, CharSequence resId) {
 
         TextView_Appcolor tab = new TextView_Appcolor(getContext());
         tab.setText(resId);

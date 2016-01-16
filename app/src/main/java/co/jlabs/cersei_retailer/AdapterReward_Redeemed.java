@@ -47,7 +47,7 @@ public class AdapterReward_Redeemed extends BaseAdapter {
         } else {
             gridView = (View) convertView;
         }
-
+        //new java.util.Date(Long.parseLong(timeInMillis))
         if(type==0)
         {
             ((TextView)gridView.findViewById(R.id.staricon)).setTextColor(context.getResources().getColor(R.color.orange_dark));

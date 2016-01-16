@@ -122,13 +122,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
             else {
                 final ViewHolder holder = (ViewHolder) viewHolder;
-                String s;
+                String s1,s2,s3;
 
                 try {
-                    s=((JSONObject) json_offers.get(position - 1)).getString("title")+"\n\n";
-                    s=s+((JSONObject) json_offers.get(position - 1)).getString("weight")+"\n\n";
-                    s=s+((JSONObject) json_offers.get(position - 1)).getString("price");
-                    holder.text.setText(s);
+                    s1=((JSONObject) json_offers.get(position - 1)).getString("title");
+                    s2=((JSONObject) json_offers.get(position - 1)).getString("weight");
+                    s3=((JSONObject) json_offers.get(position - 1)).getString("price");
+                    holder.text.setText(StaticCatelog.SpanIt2(s1,s2,s3));
                     holder.Pic.setImageUrl(((JSONObject) json_offers.get(position - 1)).getString("img"), imageLoader);
                     holder.Pic.setOnImageChangeListner(new VolleyImageInterface() {
                         @Override

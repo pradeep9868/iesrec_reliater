@@ -33,7 +33,7 @@ public class Fragment_Offers extends Fragment implements FragmentEventHandler {
     int fragVal;
     AutoScrollViewPager vpPager=null;
     FragmentsEventInitialiser eventInitialiser=null;
-    String url = StaticCatelog.geturl()+"cersei/show_offers";
+    String url = StaticCatelog.geturl()+"cersei/consumer/show_offers";
     JSONObject json=null;
     View header;
     RecyclerView recyclerView;
@@ -185,11 +185,11 @@ public class Fragment_Offers extends Fragment implements FragmentEventHandler {
 
         if(location.length()%2==0)
         {
-            url=StaticCatelog.geturl()+"cersei/show_offers?location=2";
+            url=StaticCatelog.geturl()+"cersei/consumer/show_offers?location=2";
         }
         else
         {
-            url=StaticCatelog.geturl()+"cersei/show_offers?location=1";
+            url=StaticCatelog.geturl()+"cersei/consumer/show_offers?location=1";
         }
 
         Log.i("Myapp", "Calling url " + url);

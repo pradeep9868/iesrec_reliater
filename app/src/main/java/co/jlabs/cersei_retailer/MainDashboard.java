@@ -60,7 +60,7 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
     Boolean loaded_first_page,loaded_second_page,loaded_third_page,loaded_forth_page;
     Boolean was_success_loaded_first_page,was_success_loaded_second_page,was_success_loaded_third_page,was_success_loaded_forth_page;
 
-    String url = StaticCatelog.geturl()+"cersei/location";
+    String url = StaticCatelog.geturl()+"cersei/consumer/location";
 
     NoInternetDialogBox noInternetDialogBox=null;
 

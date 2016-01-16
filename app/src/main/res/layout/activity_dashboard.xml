@@ -31,8 +31,6 @@
                 android:theme="@style/ThemeOverlay.AppCompat.Dark" android:orientation="horizontal"
                 android:gravity="center">
 
-                <!--android:paddingTop="?android:attr/actionBarSize"-->
-                <!--android:paddingBottom="?android:attr/actionBarSize"-->
 
                 <ImageView android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

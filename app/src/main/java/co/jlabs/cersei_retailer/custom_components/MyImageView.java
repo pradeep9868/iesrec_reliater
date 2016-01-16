@@ -52,7 +52,7 @@ public class MyImageView extends NetworkImageView{
                 green=0;
             if(blue<0)
                 blue=0;
-            dominantcolor = Color.argb(180, red,green,blue);
+            dominantcolor = Color.argb(160, red,green,blue);
             if(volleyImageInterface!=null)
             volleyImageInterface.adjustColor(dominantcolor);
 

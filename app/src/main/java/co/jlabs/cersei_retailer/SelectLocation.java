@@ -29,7 +29,7 @@ public class SelectLocation extends Activity implements LocationPopup.onLocation
     JSONArray data=null;
     ListView lv;
     JSONObject json=null;
-    String url = StaticCatelog.geturl()+"cersei/location";
+    String url = StaticCatelog.geturl()+"cersei/consumer/location";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
