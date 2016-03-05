@@ -31,7 +31,7 @@ import co.jlabs.cersei_retailer.custom_components.transforms.*;
 
 public class Fragment_Offers extends Fragment implements FragmentEventHandler {
     int fragVal;
-    AutoScrollViewPager vpPager=null;
+  //  AutoScrollViewPager vpPager=null;
     FragmentsEventInitialiser eventInitialiser=null;
     String url = StaticCatelog.geturl()+"cersei/consumer/show_offers";
     JSONObject json=null;
@@ -59,7 +59,7 @@ public class Fragment_Offers extends Fragment implements FragmentEventHandler {
         View layoutView = inflater.inflate(R.layout.firstpage, container,
                 false);
 
-        header = inflater.inflate(R.layout.header, null, false);
+        header = inflater.inflate(R.layout.header_xml, null, false);
 
         recyclerView = (RecyclerView) layoutView.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -77,11 +77,11 @@ public class Fragment_Offers extends Fragment implements FragmentEventHandler {
 
     @Override
     public void adjustCameraOrViewPager(boolean on) {
-        if(vpPager!=null)
+/*        if(vpPager!=null)
         if(on)
             vpPager.startAutoScroll();
         else
-            vpPager.stopAutoScroll();
+            vpPager.stopAutoScroll();*/
     }
 
     @Override
@@ -90,7 +90,7 @@ public class Fragment_Offers extends Fragment implements FragmentEventHandler {
         download_offers(location);
     }
 
-    class CustomPagerAdapter extends PagerAdapter {
+ /*   class CustomPagerAdapter extends PagerAdapter {
 
         Context mContext;
         LayoutInflater mLayoutInflater;
@@ -148,7 +148,7 @@ public class Fragment_Offers extends Fragment implements FragmentEventHandler {
             container.removeView((View) object);
         }
     }
-
+*/
     public void addInitialisationEvent(FragmentsEventInitialiser eventInitialiser)
     {
         this.eventInitialiser=eventInitialiser;
@@ -236,7 +236,7 @@ public class Fragment_Offers extends Fragment implements FragmentEventHandler {
         final RecyclerAdapter elementsAdapter = new RecyclerAdapter(getContext(),offers,eventInitialiser);
         elementsAdapter.setHeader(header);
 
-        CustomPagerAdapter adapter = new CustomPagerAdapter(getContext(),banners);
+/*        CustomPagerAdapter adapter = new CustomPagerAdapter(getContext(),banners);
 
         vpPager = (AutoScrollViewPager) header.findViewById(R.id.pager);
 
@@ -246,7 +246,7 @@ public class Fragment_Offers extends Fragment implements FragmentEventHandler {
         vpPager.setSwipeScrollDurationFactor(3);
         vpPager.setInterval(2000);
         vpPager.startAutoScroll();
-        vpPager.setPageTransformer(true, new ZoomOutTranformer());
+        vpPager.setPageTransformer(true, new ZoomOutTranformer());*/
 
         recyclerView.setAdapter(elementsAdapter);
         tellThatLoadedSuccessfully(true);

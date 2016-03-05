@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="5dp"
+    android:paddingBottom="3dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:paddingBottom="5dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:background="@drawable/background1"
+                android:orientation="vertical"
+
+                android:layout_height="wrap_content">
+                <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    android:text="Level 3"
+                    android:id="@+id/level"
+                    android:layout_gravity="center"
+                    android:textColor="#fefefe"
+                    />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
+                <com.akexorcist.roundcornerprogressbar.IconRoundCornerProgressBar
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    app:rcBackgroundColor="@color/custom_progress_orange_progress_half"
+                    app:rcBackgroundPadding="2dp"
+                    app:rcIconBackgroundColor="@color/custom_progress_orange_header"
+                    app:rcIconPadding="2dp"
+                    app:rcIconSize="30dp"
+                    app:rcIconSrc="@drawable/happy"
+                    app:rcMax="100"
+                    app:rcProgress="90"
+                    app:rcProgressColor="@color/custom_progress_orange_progress"
+                    app:rcRadius="5dp" />
+                </LinearLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="1025 "
+                        android:padding="4dp"
+                        android:textSize="20sp"
+                        android:id="@+id/totalPoints"
+                        android:textColor="#ffffff"
+                        android:layout_height="wrap_content" />
+                     <TextView
+                        android:layout_width="wrap_content"
+                         android:text="Total Points"
+                         android:paddingLeft="8dp"
+                         android:textSize="15sp"
+                         android:layout_below="@+id/totalPoints"
+                         android:textColor="#ffffff"
+                        android:layout_height="wrap_content" />
+                     <TextView
+                        android:layout_width="wrap_content"
+                         android:text="1100"
+                         android:padding="4dp"
+                         android:textSize="20sp"
+                         android:id="@+id/levelPoints"
+                         android:textColor="#ffffff"
+                         android:layout_alignParentRight="true"
+                        android:layout_height="wrap_content" />
+                     <TextView
+                        android:layout_width="wrap_content"
+                         android:text="Points to Level Up"
+                         android:paddingRight="8dp"
+                         android:textSize="15sp"
+                         android:id="@+id/iqw"
+                         android:layout_alignParentRight="true"
+                         android:layout_below="@+id/totalPoints"
+                         android:textColor="#ffffff"
+                        android:layout_height="wrap_content" />
+                     <TextView
+                        android:layout_width="match_parent"
+                         android:background="#c4c4c4"
+                         android:layout_below="@+id/iqw"
+                         android:layout_marginBottom="2dp"
+                        android:layout_height="1dp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                         android:background="#c4c4c4"
+                         android:layout_below="@+id/iqw"
+                         android:layout_marginBottom="2dp"
+                        android:layout_height="1dp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                         android:background="#c4c4c4"
+                         android:layout_below="@+id/iqw"
+                         android:layout_marginBottom="2dp"
+                        android:layout_height="1dp" />
+
+                </RelativeLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="View All Levels"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:padding="8dp"/>
+
+
+            </LinearLayout>
+
+
+    </LinearLayout>
+</LinearLayout>

@@ -151,7 +151,7 @@ public class Details extends Activity {
                     }
 
                     @Override
-                    public int removeItemClicked(int position) {
+                    public int removeItemClicked(View v,int position) {
                         Toast.makeText(context, "Removed From Cart", Toast.LENGTH_SHORT).show();
                         int quantity = 0;
 

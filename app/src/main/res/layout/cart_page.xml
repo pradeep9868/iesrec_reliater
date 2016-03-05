@@ -5,22 +5,25 @@
     android:orientation="vertical"
     android:background="@color/grey">
 
-    <TextView
-        android:id="@+id/num_of_items_in_cart"
+<LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:padding="7dp"
-        android:text="Total 10 items"/>
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
     <ListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@null"
-        >
-
-    </ListView>
+        />
     <LinearLayout
         android:id="@+id/emptycartview"
         android:layout_width="match_parent"
@@ -43,6 +46,107 @@
             android:textSize="23dp"
             android:text="Whoops!\n There is nothing in your cart."/>
     </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/lay_checkout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_gravity="bottom">
+        <RelativeLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/orange_dark">
 
+            <FrameLayout
+                android:layout_width="60dp"
+                android:layout_height="70dp"
+                android:id="@+id/cart">
 
+                <co.jlabs.cersei_retailer.custom_components.TextView_White
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:typeface="serif"
+                    android:textColor="#fff"
+                    android:textSize="30sp"
+                    android:paddingLeft="15dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/ico_cart" />
+                <TextView
+                    android:gravity="center"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:textColor="#fff"
+                    android:text="0"
+                    android:textSize="11sp"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp"
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/num_of_items_in_cart"
+                    android:layout_gravity="right"
+                    android:background="@drawable/round_circle"/>
+            </FrameLayout>
+            <TextView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#F5F5F5"
+                android:paddingLeft="10dp"
+                android:layout_margin="10dp"
+                android:id="@+id/slab"
+                android:layout_toRightOf="@+id/cart"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/rupee"
+                android:layout_toRightOf="@+id/slab"
+                android:textColor="#F5F5F5"
+                android:id="@+id/currency"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:textSize="17sp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="0"
+                android:layout_toRightOf="@+id/currency"
+                android:textColor="#F5F5F5"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:textSize="17sp"
+                android:id="@+id/money_foot"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="CHECK OUT >>"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:layout_alignParentRight="true"
+                android:textColor="#F5F5F5"
+                android:id="@+id/checkout"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:textSize="17sp"
+                android:background="@color/orange_more_dark"
+                />
+
+        </RelativeLayout>
+
+        <!--<TextView-->
+            <!--android:id="@+id/num_of_items_in_cart"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textSize="20sp"-->
+            <!--android:textStyle="bold"-->
+            <!--android:padding="7dp"-->
+            <!--android:text="Total 0 items"/>-->
+    </LinearLayout>
+
+</LinearLayout>
+</LinearLayout>
 </LinearLayout>

@@ -3,10 +3,14 @@ package co.jlabs.cersei_retailer;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
+import android.util.Base64;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,6 +19,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by Pradeep on 1/9/2016.
@@ -99,5 +105,22 @@ public class StaticCatelog {
         enter2.setSpan(new AbsoluteSizeSpan(3), 0, enter.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
         return TextUtils.concat(span1,enter1, span2,enter2,span3);
+    }
+    public static String printHashKey(Context ctx) {
+        // Add code to print out the key hash
+        try {
+            PackageInfo info = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                return Base64.encodeToString(md.digest(), Base64.DEFAULT);
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            return "SHA-1 generation: the key count not be generated: NameNotFoundException thrown";
+        } catch (NoSuchAlgorithmException e) {
+            return "SHA-1 generation: the key count not be generated: NoSuchAlgorithmException thrown";
+        }
+
+        return "SHA-1 generation: epic failed";
     }
 }

@@ -49,6 +49,7 @@
                         android:text="Freedom Fighter Enclave"/>
                 </LinearLayout>
                 <co.jlabs.cersei_retailer.custom_components.TextView_White
+                    android:id="@+id/filter_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"

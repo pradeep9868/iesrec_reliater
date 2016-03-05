@@ -1,11 +1,12 @@
 <resources>
-    <string name="app_name">Cersei_Consumer</string>
+    <string name="app_name">Discounted</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
 
+    <string name="facebook_app_id">1021126774599790</string>
 
     <!--<string name="curr_loc">&#xe600;</string>-->
     <!--<string name="add_dust">&#xe601;</string>-->
@@ -45,6 +46,7 @@
     <string name="ico_">&#xe917;</string>
     <!--<string name="take_photo">&#xe911;</string>-->
     <string name="rating">&#xe918;</string>
+    <string name="rupee">&#8377;</string>
 
     <string name="rating_points">&#xe918;12.0</string>
 

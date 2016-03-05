@@ -2,7 +2,6 @@ package co.jlabs.cersei_retailer;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -34,9 +33,9 @@ import co.jlabs.cersei_retailer.custom_components.LocationPopup;
 import co.jlabs.cersei_retailer.custom_components.NoInternetDialogBox;
 import co.jlabs.cersei_retailer.custom_components.PagerSlidingStrip;
 import co.jlabs.cersei_retailer.custom_components.PagerSlidingStrip.IconTabProvider;
+import co.jlabs.cersei_retailer.custom_components.Popup_Filter;
 import co.jlabs.cersei_retailer.custom_components.SmallBang;
 import co.jlabs.cersei_retailer.custom_components.SmallBangListener;
-import co.jlabs.cersei_retailer.custom_components.Sqlite_cart;
 import co.jlabs.cersei_retailer.custom_components.TabsView;
 
 
@@ -54,6 +53,7 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
     View tab_point,tab_cart;
     View selectLocation;
     LocationPopup dialog;
+    Popup_Filter filter_popup;
     JSONObject json=null;
     FragmentEventHandler ViewpagerHandler=null,CameraHandler=null,ScoreHandler=null,CartHandler=null;
     LoadingDialogBox loadingDialogBox;
@@ -63,6 +63,8 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
     String url = StaticCatelog.geturl()+"cersei/consumer/location";
 
     NoInternetDialogBox noInternetDialogBox=null;
+
+    View filter_Icon;
 
 
     @Override
@@ -79,7 +81,7 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
         toggle.syncState();
         loadingDialogBox= new LoadingDialogBox(this, R.style.alert_dialog);
         selectLocation.setOnClickListener(this);
-        ((TextView)selectLocation.findViewById(R.id.text_location)).setText(StaticCatelog.getStringProperty(this,"location"));
+        ((TextView)selectLocation.findViewById(R.id.text_location)).setText(StaticCatelog.getStringProperty(this, "location"));
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.findViewById(R.id.lay_prof).setOnClickListener(this);
@@ -89,12 +91,14 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
         navigationView.findViewById(R.id.lay_coupons).setOnClickListener(this);
         navigationView.findViewById(R.id.lay_settings).setOnClickListener(this);
 
+        filter_Icon=findViewById(R.id.filter_icon);
 
         mAdapter = new MyAdapter(getSupportFragmentManager());
         mPager = (ViewPager) findViewById(R.id.myviewpager);
         strip = (PagerSlidingStrip) findViewById(R.id.tabs);
         mPager.setAdapter(mAdapter);
         strip.setViewPager(mPager);
+        strip.manageFilterIcon(filter_Icon);
         mPager.setOffscreenPageLimit(4);
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -116,9 +120,9 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
                     CameraHandler.adjustCameraOrViewPager(true);
                 else
                     CameraHandler.adjustCameraOrViewPager(false);
-                if(position==page_cart) {
+                if (position == page_cart) {
                     CartHandler.adjustCameraOrViewPager(true);
-                    ((TabsView)tab_cart).removeCartNotification();
+                    ((TabsView) tab_cart).removeCartNotification();
                 }
             }
 
@@ -130,6 +134,7 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
 
         tab_point = strip.returntab(page_points);
         tab_cart = strip.returntab(page_cart);
+        filter_Icon.setOnClickListener(this);
         update_ui_for_location();
     }
 
@@ -186,6 +191,10 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
         else if (id == R.id.location) {
             download_locations();
         }
+        else if(id==R.id.filter_icon)
+        {
+            createFilterPopup();
+        }
         if(s!="")
         {
             Toast.makeText(this, "Clicked " + s, Toast.LENGTH_SHORT).show();
@@ -226,6 +235,7 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
     @Override
     public void updateCart(Boolean add) {
         ((TabsView)tab_cart).giveCartNotification(add);
+
     }
 
     @Override
@@ -374,7 +384,7 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
         } catch (JSONException e) {
             success=0;
         }
-        if(dialog==null)
+     //   if(dialog==null)
          dialog = new LocationPopup(this, R.style.alert_dialog);
 
         if(success==1)
@@ -433,4 +443,13 @@ public class MainDashboard extends FragmentActivity implements View.OnClickListe
             getLocation();
         }
     }
+
+    public void createFilterPopup()
+    {
+       // if(filter_popup==null)
+  //      filter_popup = new Popup_Filter(this, R.style.alert_dialog);
+  //      filter_popup.setUpLayout();
+    Toast.makeText(this,"Filter To be Added",Toast.LENGTH_SHORT).show();
+    }
+
 }

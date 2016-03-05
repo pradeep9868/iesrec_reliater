@@ -17,10 +17,11 @@
     </LinearLayout>
     <!-- Badge Count -->
     <LinearLayout
+        android:layout_marginTop="3dp"
+        android:layout_marginRight="3dp"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_alignParentRight="true"
-        android:padding="2dp"
         android:visibility="gone"
         android:background="@drawable/round_circle"
         android:gravity="center">

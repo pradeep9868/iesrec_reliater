@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +35,9 @@ public class Adapter_Cart extends BaseAdapter {
     ArrayList<Class_Cart> offers_list;
     Sqlite_cart cart;
     Fragment_Cart.Total_item_in_cart_text_handler totalItemInCartTextHandler;
+    private int lastPosition = -1;
+    Animation animation;
+
 
     public Adapter_Cart(Context context,ArrayList<Class_Cart>  offers_list,Fragment_Cart.Total_item_in_cart_text_handler handler) {
         this.context = context;
@@ -84,12 +89,32 @@ public class Adapter_Cart extends BaseAdapter {
         viewHolder.Close.setTag(position);
         viewHolder.Close.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Toast.makeText(context,"Removed From Cart",Toast.LENGTH_SHORT).show();
-                int quantity=cart.deleteFromCart(offers_list.get((int)v.getTag()).offer_id);
-                totalItemInCartTextHandler.handleText_cart(-quantity);
-                offers_list.remove((int)v.getTag());
-                notifyDataSetChanged();
+            public void onClick(final View v) {
+                Toast.makeText(context, "Removed From Cart", Toast.LENGTH_SHORT).show();
+                int quantity = cart.deleteFromCart(offers_list.get((int) v.getTag()).offer_id);
+                double price=offers_list.get((int) v.getTag()).price;
+                totalItemInCartTextHandler.handleText_cart(-quantity,price*-quantity);
+                View main = ((ViewGroup) v.getParent().getParent().getParent().getParent());
+                Animation animation = AnimationUtils.loadAnimation(context, R.anim.fade_out);
+                main.startAnimation(animation);
+                animation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        offers_list.remove((int) v.getTag());
+                        notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+
             }
         });
 
@@ -97,24 +122,49 @@ public class Adapter_Cart extends BaseAdapter {
             @Override
             public int addItemClicked(int position) {
                 Toast.makeText(context, "Added To Cart", Toast.LENGTH_SHORT).show();
-                totalItemInCartTextHandler.handleText_cart(1);
+                totalItemInCartTextHandler.handleText_cart(1,offers_list.get(position).price);
                 return cart.addToCart(offers_list.get(position));
             }
 
             @Override
-            public int removeItemClicked(int position) {
-                Toast.makeText(context,"Removed From Cart",Toast.LENGTH_SHORT).show();
+            public int removeItemClicked(View v,final int position) {
+                Toast.makeText(context, "Removed From Cart", Toast.LENGTH_SHORT).show();
 
-                int quantity=cart.removeFromCart(offers_list.get(position).offer_id);
+                int quantity = cart.removeFromCart(offers_list.get(position).offer_id);
                 if (quantity == 0) {
-                    offers_list.remove(position);
-                    notifyDataSetChanged();
+                    View main = ((ViewGroup) v.getParent().getParent().getParent().getParent().getParent().getParent().getParent());
+                    //Log.i("Myapp", "" + main.getId());
+                    Animation animation = AnimationUtils.loadAnimation(context, R.anim.fade_out);
+                    main.startAnimation(animation);
+
+                    animation.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            offers_list.remove(position);
+                            notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    });
+
                 }
-                totalItemInCartTextHandler.handleText_cart(-1);
+                totalItemInCartTextHandler.handleText_cart(-1,-offers_list.get(position).price);
                 return quantity;
             }
-        },position,offers_list.get(position).quantity);
-
+        }, position, offers_list.get(position).quantity);
+        if((position > lastPosition)) {
+            animation = AnimationUtils.loadAnimation(context, R.anim.up_from_bottom);
+            gridView.startAnimation(animation);
+        }
+        lastPosition = position;
 
         return gridView;
     }

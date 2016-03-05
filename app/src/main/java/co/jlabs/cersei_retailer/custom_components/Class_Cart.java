@@ -11,6 +11,7 @@ public class Class_Cart {
     public Integer price;
     public Integer point;
     public String img;
+    public Integer deliverable;
     public Integer quantity;
     Class_Cart(){
         offer_id = new Integer("0");
@@ -19,6 +20,7 @@ public class Class_Cart {
         price= new Integer("0");
         point = new Integer("0");
         img= new String();
+        deliverable = new Integer("0");
         quantity = new Integer("0");
     }
 }

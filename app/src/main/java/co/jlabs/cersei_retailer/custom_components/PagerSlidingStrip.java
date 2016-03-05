@@ -16,6 +16,7 @@ import android.os.Parcelable;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -86,6 +87,7 @@ public class PagerSlidingStrip extends HorizontalScrollView {
     private Locale locale;
 
     private ArrayList<TabsView> tv;
+    private View FilterIcon;
 
     public PagerSlidingStrip(Context context) {
 
@@ -337,7 +339,9 @@ public class PagerSlidingStrip extends HorizontalScrollView {
             currentPosition = position;
             currentPositionOffset = positionOffset;
 
-        scrollToChild(position, (int) (positionOffset * tabsContainer.getChildAt(position).getWidth()));
+            scrollToChild(position, (int) (positionOffset * tabsContainer.getChildAt(position).getWidth()));
+             if(position==0)
+             manageFilterIconForScroll(1-positionOffset);
 
             invalidate();
 
@@ -380,6 +384,32 @@ public class PagerSlidingStrip extends HorizontalScrollView {
                 tv.get(i).setTextColor(Color.parseColor("#777753"));
             }
         }
+        if(position==0)
+        {
+            manageFilterIconForVisibility(VISIBLE);
+        }
+        else
+        {
+            manageFilterIconForVisibility(INVISIBLE);
+        }
+    }
+
+    public void manageFilterIcon(View v)
+    {
+        this.FilterIcon=v;
+    }
+    public void manageFilterIconForVisibility(int Visibility)
+    {
+        if(FilterIcon!=null)
+            {
+                FilterIcon.setVisibility(Visibility);
+            }
+    }
+    public void manageFilterIconForScroll(float currentPositionOffset)
+    {
+        if(FilterIcon.getVisibility()!=VISIBLE)
+            FilterIcon.setVisibility(VISIBLE);
+        FilterIcon.setAlpha(currentPositionOffset);
     }
 
     public View returntab(int position)

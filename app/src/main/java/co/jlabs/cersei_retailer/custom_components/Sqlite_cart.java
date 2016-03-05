@@ -40,6 +40,7 @@ public class Sqlite_cart extends SQLiteOpenHelper {
                 "price INTEGER,"+
 				"point INTEGER,"+
 				"img TEXT,"+
+                "deliverable INTEGER,"+
 				"quantity INTEGER);";
 
  		db.execSQL(CREATE_CartED_TABLE);
@@ -66,6 +67,7 @@ public class Sqlite_cart extends SQLiteOpenHelper {
     private static final String KEY_PRICE = "price";
     private static final String KEY_POINT = "point";
     private static final String KEY_IMG = "img";
+    private static final String KEY_DEL = "deliverable";
     private static final String KEY_QUANTITY = "quantity";
 
     public int addToCart(Class_Cart tp){
@@ -86,6 +88,7 @@ public class Sqlite_cart extends SQLiteOpenHelper {
             values.put(KEY_PRICE, tp.price);
             values.put(KEY_POINT, tp.point);
             values.put(KEY_IMG, tp.img);
+            values.put(KEY_DEL, tp.deliverable);
             values.put(KEY_QUANTITY, 1);
             db.insert(TABLE_Cart, null, values);
             values.clear();
@@ -118,6 +121,7 @@ public class Sqlite_cart extends SQLiteOpenHelper {
                 values.put(KEY_PRICE, 80);
                 values.put(KEY_POINT, tp.getInt("points"));
                 values.put(KEY_IMG, tp.getString("img"));
+                values.put(KEY_DEL, tp.getBoolean("delivery")?1:0);
                 values.put(KEY_QUANTITY, 1);
                 db.insert(TABLE_Cart, null, values);
                 values.clear();
@@ -153,7 +157,8 @@ public class Sqlite_cart extends SQLiteOpenHelper {
                 tp.price=(Integer.parseInt(cursor.getString(4)));
                 tp.point=(Integer.parseInt(cursor.getString(5)));
                 tp.img=cursor.getString(6);
-                tp.quantity=(Integer.parseInt(cursor.getString(7)));
+                tp.deliverable=(Integer.parseInt(cursor.getString(7)));
+                tp.quantity=(Integer.parseInt(cursor.getString(8)));
                 Carted.add(tp);
             } while (cursor.moveToNext());
         }
@@ -182,7 +187,7 @@ public class Sqlite_cart extends SQLiteOpenHelper {
     public int deleteFromCart(int Offer_id)
     {
         int quantity = findIfOfferAlreadyExistsInCart(Offer_id);
-        if(quantity>1)
+        if(quantity>=1)
         {
             SQLiteDatabase db = this.getWritableDatabase();
             db.delete(TABLE_Cart, KEY_OFFER_ID + " = ?", new String[]{String.valueOf(Offer_id)});

@@ -76,7 +76,7 @@ public class SelectLocation extends Activity implements LocationPopup.onLocation
         } catch (JSONException e) {
             success=0;
         }
-        if(dialog==null)
+     //   if(dialog==null)
             dialog = new LocationPopup(context, R.style.alert_dialog);
 
         if(success==1)
@@ -84,8 +84,9 @@ public class SelectLocation extends Activity implements LocationPopup.onLocation
             findViewById(R.id.select).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(!dialog.isShowing())
-                        dialog.BuildDialog(SelectLocation.this, json);
+                   // if(!dialog.isShowing())
+                    dialog = new LocationPopup(context, R.style.alert_dialog);
+                    dialog.BuildDialog(SelectLocation.this, json);
                 }
             });
             dialog.BuildDialog(SelectLocation.this, json);

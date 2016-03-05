@@ -1,5 +1,7 @@
 package co.jlabs.cersei_retailer.custom_components;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -20,7 +22,7 @@ public class AddOrRemoveCart extends LinearLayout implements View.OnClickListene
     private TextView num_of_items;
     private  ItemsClickListener listner;
     private int position;
-
+    ObjectAnimator AddtoCartColorAnimator,RemoveFromCartColorAnimator;
 
     public AddOrRemoveCart(Context context) {
         super(context);
@@ -46,6 +48,18 @@ public class AddOrRemoveCart extends LinearLayout implements View.OnClickListene
         RemoveFromCart = ((ViewGroup)getChildAt(0)).getChildAt(0);
         num_of_items = (TextView) ((ViewGroup)getChildAt(0)).getChildAt(1);
         AddtoCart = ((ViewGroup)getChildAt(0)).getChildAt(2);
+        AddtoCartColorAnimator = ObjectAnimator.ofObject(AddtoCart,
+                "textColor",
+                new ArgbEvaluator(),
+                0xFF004d00,
+                0xFF777777);
+        AddtoCartColorAnimator.setDuration(400);
+        RemoveFromCartColorAnimator = ObjectAnimator.ofObject(RemoveFromCart,
+                "textColor",
+                new ArgbEvaluator(),
+                0xFF990000,
+                0xFF777777);
+        RemoveFromCartColorAnimator.setDuration(400);
     }
 
     public void addOnItemClickListner(ItemsClickListener listner,int position,int quantity)
@@ -62,12 +76,14 @@ public class AddOrRemoveCart extends LinearLayout implements View.OnClickListene
         switch (v.getId())
         {
             case R.id.removefromcart :
-                int quantity=listner.removeItemClicked(position);
+                int quantity=listner.removeItemClicked(v,position);
                 if(quantity>=0)
                  num_of_items.setText(""+quantity);
+                 RemoveFromCartColorAnimator.start();
                 break;
             case R.id.addtocart :
                 num_of_items.setText("" + listner.addItemClicked(position));
+                AddtoCartColorAnimator.start();
                 break;
         }
     }
@@ -76,7 +92,7 @@ public class AddOrRemoveCart extends LinearLayout implements View.OnClickListene
     public interface ItemsClickListener
     {
         int addItemClicked(int position);
-        int removeItemClicked(int position);
+        int removeItemClicked(View v,int position);
     }
 
 }

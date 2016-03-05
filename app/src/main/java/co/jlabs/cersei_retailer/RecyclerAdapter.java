@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
-import android.support.v4.view.PagerAdapter;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +23,6 @@ import co.jlabs.cersei_retailer.ActivityTransition.ActivityTransitionLauncher;
 import co.jlabs.cersei_retailer.custom_components.AddOrRemoveCart;
 import co.jlabs.cersei_retailer.custom_components.MyImageView;
 import co.jlabs.cersei_retailer.custom_components.Sqlite_cart;
-import co.jlabs.cersei_retailer.custom_components.TextView_Triangle;
 import co.jlabs.cersei_retailer.custom_components.VolleyImageInterface;
 
 /**
@@ -40,6 +39,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     Context context;
     RecyclerAdapter adapter;
     FragmentsEventInitialiser eventInitialiser;
+    //private int lastPosition = -1;
 
 
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
@@ -51,16 +51,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public class ViewHolder extends RecyclerView.ViewHolder {
 
             View gridItem;
-            TextView text;
+            TextView text,deliverable;
             View mask;
             MyImageView Pic;
             AddOrRemoveCart addOrRemoveCart;
+
 
             public ViewHolder(View v) {
                 super(v);
                 gridItem = v;
                 text=((TextView)v.findViewById(R.id.text));
                 Pic=(MyImageView) v.findViewById(R.id.pic);
+                deliverable= (TextView) v.findViewById(R.id.deliverable);
                 mask=v.findViewById(R.id.mask);
                 addOrRemoveCart= (AddOrRemoveCart) v.findViewById(R.id.add_or_remove_cart);
             }
@@ -107,8 +109,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 return new HeaderViewHolder(headerView);
 
             } else {
-                View textView = LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_item, parent, false);
 
+                View textView = LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_item, parent, false);
                 return new ViewHolder(textView);
             }
         }
@@ -128,8 +130,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     s1=((JSONObject) json_offers.get(position - 1)).getString("title");
                     s2=((JSONObject) json_offers.get(position - 1)).getString("weight");
                     s3=((JSONObject) json_offers.get(position - 1)).getString("price");
-                    holder.text.setText(StaticCatelog.SpanIt2(s1,s2,s3));
+                    holder.text.setText(StaticCatelog.SpanIt2(s1, s2, s3));
                     holder.Pic.setImageUrl(((JSONObject) json_offers.get(position - 1)).getString("img"), imageLoader);
+                    holder.deliverable.setTextColor(((JSONObject) json_offers.get(position - 1)).getBoolean("delivery")? 0xffFFA000:0xfff20022);
                     holder.Pic.setOnImageChangeListner(new VolleyImageInterface() {
                         @Override
                         public void adjustColor(int color) {
@@ -155,7 +158,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         }
 
                         @Override
-                        public int removeItemClicked(int position) {
+                        public int removeItemClicked(View v,int position) {
                             Toast.makeText(context,"Removed From Cart",Toast.LENGTH_SHORT).show();
                             int quantity=0;
                             eventInitialiser.updateCart(false);
@@ -175,6 +178,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 holder.gridItem.setOnClickListener(this);
                 holder.gridItem.setTag(position);
             }
+
+//            Animation animation = AnimationUtils.loadAnimation(context, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
+//            viewHolder.itemView.startAnimation(animation);
+//            lastPosition = position;
         }
 
     @Override

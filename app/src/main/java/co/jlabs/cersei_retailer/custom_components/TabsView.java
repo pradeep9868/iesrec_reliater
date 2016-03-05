@@ -5,6 +5,8 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -91,6 +93,8 @@ public class TabsView extends LinearLayout{
                 removeCartNotification();
             }
         }
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.shake);
+        this.startAnimation(animation);
     }
 
     public void removeCartNotification()
